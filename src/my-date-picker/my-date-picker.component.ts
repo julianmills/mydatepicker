@@ -6,7 +6,6 @@ import { UtilService } from "./services/my-date-picker.util.service";
 
 // webpack1_
 declare var require: any;
-const myDpStyles: string = require("./my-date-picker.component.css");
 const myDpTpl: string = require("./my-date-picker.component.html");
 // webpack2_
 
@@ -27,7 +26,6 @@ const MMM = "mmm";
 @Component({
     selector: "my-date-picker",
     exportAs: "mydatepicker",
-    styles: [myDpStyles],
     template: myDpTpl,
     providers: [LocaleService, UtilService, MYDP_VALUE_ACCESSOR],
     encapsulation: ViewEncapsulation.None
@@ -832,7 +830,7 @@ export class MyDatePicker implements OnChanges, ControlValueAccessor, OnDestroy 
         this.nextYearDisabled = y + 1 > this.opts.maxYear || dny;
     }
 
-    // Remove listeners or nullify globals on component destroy 
+    // Remove listeners or nullify globals on component destroy
     ngOnDestroy() {
         if (this.globalListener) {
             this.globalListener();

@@ -7,7 +7,8 @@ module.exports = function (config) {
         frameworks: ['jasmine'],
 
         files: [
-            {pattern: './karma-test-shim.js', watched: false}
+            {pattern: './karma-test-shim.js', watched: false},
+            '../src/my-date-picker/my-date-picker.component.css'
         ],
 
         preprocessors: {

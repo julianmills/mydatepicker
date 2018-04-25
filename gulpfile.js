@@ -45,15 +45,10 @@ gulp.task('minify.html', function() {
 });
 
 gulp.task('inline.template.and.styles.to.component', function() {
-    var styles = fs.readFileSync('./tmp/my-date-picker.component.css', 'utf-8');
     var htmlTpl = fs.readFileSync('./tmp/my-date-picker.component.html', 'utf-8');
-
-    styles = styles.split('\\e').join('\\\\e');
-
     return gulp.src(['./src/my-date-picker/my-date-picker.component.ts'])
         .pipe(replace(str1, str3))
         .pipe(replace(str2, str4))
-        .pipe(replace('styles: [myDpStyles],', 'styles: [' + '`' + styles + '`' + '],'))
         .pipe(replace('template: myDpTpl,', 'template: `' + htmlTpl + '`' + ','))
         .pipe(gulp.dest(function(file) {
             return file.base;
@@ -87,7 +82,8 @@ gulp.task('copy.files.to.npmdist.root.dir', function() {
             './FONT-LICENSE',
             './package/README.md',
             './package/index.d.ts',
-            './package/index.js'
+            './package/index.js',
+            './src/my-date-picker/my-date-picker.component.css'
         ]).pipe(gulp.dest('./npmdist'));
 });
 
