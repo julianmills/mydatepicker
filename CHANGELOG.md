@@ -1,3 +1,47 @@
+# 2.6.9 (2020-02-16)
+
+### Bug Fixes
+
+* none
+
+### Features
+
+* Merged: added detectChanges call to setDisabledState and onClickDocument #631
+
+
+# 2.6.8 (2019-12-14)
+
+### Bug Fixes
+
+* none
+
+### Features
+
+* Rendered removed.
+
+
+# 2.6.7 (2019-12-12)
+
+### Bug Fixes
+
+* none
+
+### Features
+
+* Merged PR: Add support for arial-label attribute on days of the month - #627.
+
+
+# 2.6.6 (2018-09-22)
+
+### Bug Fixes
+
+* none
+
+### Features
+
+* Added et locale
+
+
 # 2.6.5 (2018-08-16)
 
 ### Bug Fixes

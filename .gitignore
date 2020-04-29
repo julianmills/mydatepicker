@@ -5,4 +5,7 @@ typings/
 build-sampleapp/
 test-output/
 npmdist/
+test-output/
+dist/
 .tmpbuild/
+package-lock.json

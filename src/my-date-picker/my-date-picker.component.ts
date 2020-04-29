@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, ElementRef, ViewEncapsulation, ChangeDetectorRef, Renderer, ViewChild, forwardRef, OnDestroy } from "@angular/core";
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, ElementRef, ViewEncapsulation, ChangeDetectorRef, ViewChild, forwardRef, OnDestroy } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { IMyDate, IMyDateRange, IMyMonth, IMyCalendarDay, IMyCalendarMonth, IMyCalendarYear, IMyWeek, IMyDayLabels, IMyMonthLabels, IMyOptions, IMyDateModel, IMyInputFieldChanged, IMyCalendarViewChanged, IMyInputFocusBlur, IMyMarkedDates, IMyMarkedDate, IMyDateFormat } from "./interfaces/index";
 import { LocaleService } from "./services/my-date-picker.locale.service";
@@ -6,6 +6,7 @@ import { UtilService } from "./services/my-date-picker.util.service";
 
 // webpack1_
 declare var require: any;
+const myDpStyles: string = require("./my-date-picker.component.css");
 const myDpTpl: string = require("./my-date-picker.component.html");
 // webpack2_
 
@@ -26,13 +27,13 @@ const MMM = "mmm";
 @Component({
     selector: "my-date-picker",
     exportAs: "mydatepicker",
+    styles: [myDpStyles],
     template: myDpTpl,
     providers: [LocaleService, UtilService, MYDP_VALUE_ACCESSOR],
     encapsulation: ViewEncapsulation.None
 })
 
 export class MyDatePicker implements OnChanges, ControlValueAccessor, OnDestroy {
-    globalListener: Function;
     @Input() options: IMyOptions;
     @Input() locale: string;
     @Input() defaultMonth: string;
@@ -134,10 +135,11 @@ export class MyDatePicker implements OnChanges, ControlValueAccessor, OnDestroy 
         ariaLabelPrevMonth: <string> "Previous Month",
         ariaLabelNextMonth: <string> "Next Month",
         ariaLabelPrevYear: <string> "Previous Year",
-        ariaLabelNextYear: <string> "Next Year"
+        ariaLabelNextYear: <string> "Next Year",
+        ariaLabelDay: <string> "Select day"
     };
 
-    constructor(public elem: ElementRef, private renderer: Renderer, private cdr: ChangeDetectorRef, private localeService: LocaleService, private utilService: UtilService) {
+    constructor(public elem: ElementRef, private cdr: ChangeDetectorRef, private localeService: LocaleService, private utilService: UtilService) {
         this.setLocaleOptions();
     }
 
@@ -300,8 +302,10 @@ export class MyDatePicker implements OnChanges, ControlValueAccessor, OnDestroy 
 
     onCloseSelector(event: any): void {
         if (event.keyCode === KeyCode.esc && this.showSelector && !this.opts.inline) {
+            this.removeGlobalListener();
+
             this.calendarToggle.emit(CalToggle.CloseByEsc);
-            this.showSelector = false;
+            this.showSelector = false; 
         }
     }
 
@@ -353,6 +357,7 @@ export class MyDatePicker implements OnChanges, ControlValueAccessor, OnDestroy 
 
     setDisabledState(disabled: boolean): void {
         this.opts.componentDisabled = disabled;
+        this.cdr.detectChanges();
     }
 
     registerOnChange(fn: any): void {
@@ -361,6 +366,10 @@ export class MyDatePicker implements OnChanges, ControlValueAccessor, OnDestroy 
 
     registerOnTouched(fn: any): void {
         this.onTouchedCb = fn;
+    }
+
+    ngOnDestroy() {
+        this.removeGlobalListener();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -444,7 +453,9 @@ export class MyDatePicker implements OnChanges, ControlValueAccessor, OnDestroy 
         this.clearDate();
         if (this.showSelector) {
             this.calendarToggle.emit(CalToggle.CloseByCalBtn);
+            this.removeGlobalListener();
         }
+
         this.showSelector = false;
     }
 
@@ -467,27 +478,41 @@ export class MyDatePicker implements OnChanges, ControlValueAccessor, OnDestroy 
         }
         else {
             this.closeSelector(CalToggle.CloseByCalBtn);
+            this.removeGlobalListener();
+        }
+    }
+
+    onClickListener = (evt: MouseEvent) => this.onClickDocument(evt);
+
+    addGlobalListener(): void {
+        document.addEventListener("click", this.onClickListener);
+    }
+
+    removeGlobalListener(): void {
+        document.removeEventListener("click", this.onClickListener);
+    }
+
+    onClickDocument(evt: any): void {
+        if (this.showSelector && event.target && this.elem.nativeElement !== event.target && !this.elem.nativeElement.contains(event.target)) {
+            this.showSelector = false;
+            this.cdr.detectChanges();
+            this.calendarToggle.emit(CalToggle.CloseByOutClick);
+
+            this.removeGlobalListener();
+        }
+        if (this.opts.monthSelector || this.opts.yearSelector) {
+            this.resetMonthYearSelect();
         }
     }
 
     openSelector(reason: number): void {
-        this.globalListener = this.globalListener || this.renderer.listenGlobal("document", "click", (event: any) => {
-            if (this.showSelector && event.target && this.elem.nativeElement !== event.target && !this.elem.nativeElement.contains(event.target)) {
-                this.showSelector = false;
-                this.calendarToggle.emit(CalToggle.CloseByOutClick);
-            }
-            if (this.opts.monthSelector || this.opts.yearSelector) {
-                this.resetMonthYearSelect();
-            }
-        });
+        this.addGlobalListener();
+
         this.setVisibleMonth();
         this.calendarToggle.emit(reason);
     }
 
     closeSelector(reason: number): void {
-        if (this.globalListener) {
-            this.globalListener();
-        }
         this.calendarToggle.emit(reason);
     }
 
@@ -621,6 +646,9 @@ export class MyDatePicker implements OnChanges, ControlValueAccessor, OnDestroy 
         if (this.showSelector) {
             this.calendarToggle.emit(closeReason);
         }
+
+        this.removeGlobalListener();
+
         this.showSelector = false;
         this.setFocusToInputBox();
     }
@@ -828,12 +856,5 @@ export class MyDatePicker implements OnChanges, ControlValueAccessor, OnDestroy 
         this.prevYearDisabled = y - 1 < this.opts.minYear || dpy;
         this.nextMonthDisabled = m === 12 && y === this.opts.maxYear || dnm;
         this.nextYearDisabled = y + 1 > this.opts.maxYear || dny;
-    }
-
-    // Remove listeners or nullify globals on component destroy
-    ngOnDestroy() {
-        if (this.globalListener) {
-            this.globalListener();
-        }
     }
 }

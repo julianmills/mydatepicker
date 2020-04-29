@@ -1,11 +1,26 @@
 # mydatepicker
 
+**New datepicker library**
+
+__If your Angular version is >= 7.2 you can use a new version ([angular-mydatepicker](https://github.com/kekeh/angular-mydatepicker)) of this component:__ 
+* [repository](https://github.com/kekeh/angular-mydatepicker) 
+* [online demo](https://kekeh.github.io/angular-mydatepicker/) 
+
+
+**Version compatibility of this library**
+
+| Library version | Angular version | Branch | Installation |
+| :-------------- | :-------------- | :----- | :----------- |
+| < 9.0.0 | >= 2 and < 9 | master | npm install --save mydatepicker@latest| 
+| >= 9.0.0 | >= 9 | angularIvy | npm install --save mydatepicker@ng9 | 
+
+
 **Angular date picker**
 
 [![Build Status](https://travis-ci.org/kekeh/mydatepicker.svg?branch=master)](https://travis-ci.org/kekeh/mydatepicker)
 [![codecov](https://codecov.io/gh/kekeh/mydatepicker/branch/master/graph/badge.svg)](https://codecov.io/gh/kekeh/mydatepicker)
 [![npm](https://img.shields.io/npm/v/mydatepicker.svg?maxAge=2592000?style=flat-square)](https://www.npmjs.com/package/mydatepicker)
-[![npm](https://img.shields.io/npm/dm/mydatepicker.svg)](https://www.npmjs.com/package/mydatepicker)
+[![npm](https://img.shields.io/npm/dt/mydatepicker.svg)](https://www.npmjs.com/package/mydatepicker)
 
 ## Description
 Highly configurable Angular date picker. Compatible __Angular2+__.
@@ -251,6 +266,7 @@ Value of the __options__ attribute is a type of [IMyDpOptions](https://github.co
 | __ariaLabelNextMonth__   | Next Month | string | Aria label text of next month button. |
 | __ariaLabelPrevYear__   | Previous Year | string | Aria label text of previous year button. |
 | __ariaLabelNextYear__   | Next Year | string | Aria label text of next year button. |
+| __ariaLabelDay__   | Days | string | Aria label text of day button. |
 
 * Example of the options data (not all properties listed):
 ```ts
@@ -269,7 +285,7 @@ Value of the __options__ attribute is a type of [IMyDpOptions](https://github.co
 An ISO 639-1 language code can be provided as shorthand for the following options (dayLabels, monthLabels, dateFormat, todayBtnTxt, firstDayOfWeek and sunHighlight).
 Currently supported languages: __en__, __fr__, __fr-ch__, __ja__, __fi__, __es__, __hu__, __sv__, __nl__, __ru__, __uk__, __no__, __tr__,
 __pt-br__, __de__, __de-ch__, __it__, __it-ch__, __pl__, __my__, __sk__, __sl__, __zh-cn__, __he__, __ro__, __ca__, __id__, __en-au__, __am-et__, __cs__, __el__, __kk__,
-__th__, __ko-kr__, __da__, __lt__, __vi__, __bn__, __bg__, __hr__, __ar__,  __is__, __tw__ and __lv__.
+__th__, __ko-kr__, __da__, __lt__, __vi__, __bn__, __bg__, __hr__, __ar__,  __is__, __tw__, __lv__ and __et__.
 
 The __locale__ options can be override by __options__ attribute.
 
