@@ -27,7 +27,7 @@ const MMM = "mmm";
 @Component({
     selector: "my-date-picker",
     exportAs: "mydatepicker",
-    styles: [myDpStyles],
+    styles: [],
     template: myDpTpl,
     providers: [LocaleService, UtilService, MYDP_VALUE_ACCESSOR],
     encapsulation: ViewEncapsulation.None
@@ -305,7 +305,7 @@ export class MyDatePicker implements OnChanges, ControlValueAccessor, OnDestroy 
             this.removeGlobalListener();
 
             this.calendarToggle.emit(CalToggle.CloseByEsc);
-            this.showSelector = false; 
+            this.showSelector = false;
         }
     }
 
